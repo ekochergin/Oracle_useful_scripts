@@ -1,0 +1,15 @@
+ALTER SESSION SET EVENTS '10046 trace name context forever, level 12'; -- turns tracing on
+ALTER SESSION SET TRACEFILE_IDENTIFIER = "eindeutig_trace_file_name"; -- optional. set unique trace file name suffix
+
+select ....; -- SQl or PL/SQL code to be traced. It has to be executed completely, fetching ALL the data
+
+
+ALTER SESSION SET EVENTS '10046 trace name context off'; -- turn tracing off
+
+
+-- path to trace file. to be executed in the same window of dev tool 
+SELECT p.tracefile
+FROM v$session s,
+v$process p
+WHERE s.paddr = p.addr
+AND s.audsid = userenv('sessionid')
